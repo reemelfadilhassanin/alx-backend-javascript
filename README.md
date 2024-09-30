@@ -6,7 +6,6 @@ This project focuses on learning and implementing the new features introduced in
 ### Project Details
 - **Programming Language**: JavaScript
 - **ES6**: ECMAScript 2015
-- **Weight**: 1
 - **Project Start Date**: September 30, 2024, 6:00 AM
 - **Project End Date**: October 1, 2024, 6:00 AM
 - **Checker Release Date**: September 30, 2024, 12:00 PM
