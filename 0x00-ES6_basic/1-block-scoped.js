@@ -1,12 +1,13 @@
 export default function taskBlock(trueOrFalse) {
-    let task = false;  // Use let instead of var
-    let task2 = true;  // Use let instead of var
+    const task = false;
+    const task2 = true;
   
+    /* eslint-disable no-unused-vars */
     if (trueOrFalse) {
-      let task = true;  // This task is block-scoped
-      let task2 = false;  // This task2 is block-scoped
+      const task = true;
+      const task2 = false;
     }
+    /* eslint-enable no-unused-vars */
   
     return [task, task2];
   }
-  
