@@ -3,7 +3,6 @@ module.exports = {
     browser: false,
     es6: true,
     jest: true,
-    node: true, // Added Node environment
   },
   extends: [
     'airbnb-base',
@@ -26,17 +25,11 @@ module.exports = {
       'LabeledStatement',
       'WithStatement',
     ],
-    'no-unused-vars': 'error', // Ensures unused vars are flagged
   },
-  overrides: [
+  overrides:[
     {
       files: ['*.js'],
       excludedFiles: 'babel.config.js',
-    },
-  ],
-  settings: {
-    react: {
-      version: 'detect', // Ensures React version is detected
-    },
-  },
+    }
+  ]
 };
