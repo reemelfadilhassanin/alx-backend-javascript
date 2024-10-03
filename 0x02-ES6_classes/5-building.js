@@ -1,21 +1,27 @@
 // 5-building.js
+
 export default class Building {
-    constructor(sqft) {
-        this._sqft = this.validateSqft(sqft);
-    }
-
-    validateSqft(sqft) {
-        if (typeof sqft !== 'number') {
-            throw new TypeError('sqft must be a number');
-        }
-        return sqft;
-    }
-
-    get sqft() {
-        return this._sqft;
-    }
-
-    evacuationWarningMessage() {
-        throw new Error('Class extending Building must override evacuationWarningMessage');
-    }
-}
+	constructor(sqft) {
+	  if (new.target !== Building && new.target.prototype.evacuationWarningMessage === undefined) {
+		throw new Error('Class extending Building must override evacuationWarningMessage');
+	  }
+	  this._sqft = sqft;
+	}
+  
+	get sqft() {
+	  return this._sqft;
+	}
+  
+	set sqft(sqft) {
+	  if (sqft === undefined || sqft === null) {
+		throw new Error('sqft must be defined');
+	  } else if (typeof sqft === 'string') {
+		throw new Error('sqft must be a number');
+	  } else if (typeof sqft !== 'number' || sqft <= 0) {
+		throw new Error('sqft must be a positive number');
+	  } else if (!Number.isFinite(sqft)) {
+		throw new Error('sqft must be a finite number');
+	  }
+	  this._sqft = Number(sqft);
+	}
+  }
