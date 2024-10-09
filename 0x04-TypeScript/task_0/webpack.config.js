@@ -1,10 +1,10 @@
-
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin'); // Ensure this line is present
 
 module.exports = {
+  mode: 'development', // Add this line
   entry: "./js/main.ts",
   devtool: "inline-source-map",
   module: {
