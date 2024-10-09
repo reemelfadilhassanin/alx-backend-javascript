@@ -89,3 +89,5 @@ To get started with the project, clone the repository and install the necessary 
 git clone https://github.com/your-repo/alx-backend-javascript.git
 cd alx-backend-javascript/0x04-TypeScript
 npm install
+to run 
+npm run start-dev
