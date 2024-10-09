@@ -10,14 +10,19 @@ interface Teacher {
     [key: string]: any; // Allow any additional properties
 }
 
-// Create a teacher object
-const teacher3: Teacher = {
+// Define the Directors interface extending Teacher
+interface Directors extends Teacher {
+    numberOfReports: number; // Required property for Directors
+}
+
+// Create a director object
+const director1: Directors = {
     firstName: 'John',
     lastName: 'Doe',
-    fullTimeEmployee: false,
+    fullTimeEmployee: true,
     location: 'London',
-    contract: false // Additional property not explicitly defined in the interface
+    numberOfReports: 17,
 };
 
-// Log the teacher object
-console.log(teacher3);
+// Log the director object
+console.log(director1);
