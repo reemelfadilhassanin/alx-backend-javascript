@@ -1,28 +1,14 @@
-// main.ts
-
-// Define the Teacher interface
-interface Teacher {
-    firstName: string;
-    lastName: string;
-    fullTimeEmployee: boolean;
-    yearsOfExperience?: number; // Optional property
-    location: string;
-    [key: string]: any; // Allow any additional properties
-}
-
-// Define the Directors interface extending Teacher
-interface Directors extends Teacher {
-    numberOfReports: number; // Required property for Directors
-}
-
-// Create a director object
-const director1: Directors = {
-    firstName: 'John',
-    lastName: 'Doe',
-    fullTimeEmployee: true,
-    location: 'London',
-    numberOfReports: 17,
-};
-
-// Log the director object
-console.log(director1);
+// Define the interface for the function
+interface printTeacherFunction {
+    (firstName: string, lastName: string): string;
+  }
+  
+  // Implement the function
+  const printTeacher: printTeacherFunction = (firstName, lastName) => {
+    return `${firstName[0]}. ${lastName}`;
+  };
+  
+  // Example usage
+  console.log(printTeacher("John", "Doe")); // Outputs: J. Doe
+  console.log(printTeacher("Jane", "Smith")); // Outputs: J. Smith
+  
