@@ -1,5 +1,5 @@
-const http = require('http');  // Import Node.js HTTP module
-const fs = require('fs');  // Import Node.js FS (File System) module
+const http = require('http'); // Import Node.js HTTP module
+const fs = require('fs'); // Import Node.js FS (File System) module
 
 // Server configuration: port and host
 const PORT = 1245;
@@ -30,8 +30,8 @@ const countStudents = (dataPath) => new Promise((resolve, reject) => {
       const reportParts = [];
       // Split file content into lines, trim any extra whitespace, and split by line breaks
       const fileLines = data.toString('utf-8').trim().split('\n');
-      const studentGroups = {};  // Object to group students by their fields (e.g., CS, SWE)
-      
+      const studentGroups = {}; // Object to group students by their fields (e.g., CS, SWE)
+
       // Split the first line (header) to get the database column names
       const dbFieldNames = fileLines[0].split(',');
       // Extract student property names (excluding the last field)
@@ -39,9 +39,11 @@ const countStudents = (dataPath) => new Promise((resolve, reject) => {
 
       // Loop through each line (excluding the header) and process student data
       for (const line of fileLines.slice(1)) {
-        const studentRecord = line.split(',');  // Split by comma
-        const studentPropValues = studentRecord.slice(0, studentRecord.length - 1);  // Get student details
-        const field = studentRecord[studentRecord.length - 1];  // Get student's field (e.g., CS, SWE)
+        const studentRecord = line.split(','); // Split by comma
+        const studentPropValues = studentRecord.slice(0, studentRecord.length - 1);
+        // Get student details
+        const field = studentRecord[studentRecord.length - 1];
+        // Get student's field (e.g., CS, SWE)
 
         // If the field doesn't exist in studentGroups, create it
         if (!Object.keys(studentGroups).includes(field)) {
@@ -70,7 +72,7 @@ const countStudents = (dataPath) => new Promise((resolve, reject) => {
         reportParts.push([
           `Number of students in ${field}: ${group.length}.`,
           'List:',
-          group.map((student) => student.firstname).join(', '),  // List student names
+          group.map((student) => student.firstname).join(', '), // List student names
         ].join(' '));
       }
 
@@ -86,37 +88,37 @@ const SERVER_ROUTE_HANDLERS = [
     // Handle the root route "/"
     route: '/',
     handler(_, res) {
-      const responseText = 'Hello Holberton School!';  // Response content
-      res.setHeader('Content-Type', 'text/plain');  // Set the content type to plain text
-      res.setHeader('Content-Length', responseText.length);  // Set the content length
-      res.statusCode = 200;  // Set status code to 200 (OK)
-      res.write(Buffer.from(responseText));  // Write the response to the client
+      const responseText = 'Hello Holberton School!'; // Response content
+      res.setHeader('Content-Type', 'text/plain'); // Set the content type to plain text
+      res.setHeader('Content-Length', responseText.length); // Set the content length
+      res.statusCode = 200; // Set status code to 200 (OK)
+      res.write(Buffer.from(responseText)); // Write the response to the client
     },
   },
   {
     // Handle the "/students" route
     route: '/students',
     handler(_, res) {
-      const responseParts = ['This is the list of our students'];  // Start the response
+      const responseParts = ['This is the list of our students']; // Start the response
 
       // Call countStudents to get the report about students
       countStudents(DB_FILE)
         .then((report) => {
-          responseParts.push(report);  // Append the student report to the response
-          const responseText = responseParts.join('\n');  // Combine parts into one response
-          res.setHeader('Content-Type', 'text/plain');  // Set content type
-          res.setHeader('Content-Length', responseText.length);  // Set content length
-          res.statusCode = 200;  // Set status code to 200 (OK)
-          res.write(Buffer.from(responseText));  // Write the response to the client
+          responseParts.push(report); // Append the student report to the response
+          const responseText = responseParts.join('\n'); // Combine parts into one response
+          res.setHeader('Content-Type', 'text/plain'); // Set content type
+          res.setHeader('Content-Length', responseText.length); // Set content length
+          res.statusCode = 200; // Set status code to 200 (OK)
+          res.write(Buffer.from(responseText)); // Write the response to the client
         })
         .catch((err) => {
           // If an error occurs (e.g., database file not found), append the error message
           responseParts.push(err instanceof Error ? err.message : err.toString());
-          const responseText = responseParts.join('\n');  // Combine parts into one response
-          res.setHeader('Content-Type', 'text/plain');  // Set content type
-          res.setHeader('Content-Length', responseText.length);  // Set content length
-          res.statusCode = 200;  // Set status code to 200 (OK)
-          res.write(Buffer.from(responseText));  // Write the response to the client
+          const responseText = responseParts.join('\n'); // Combine parts into one response
+          res.setHeader('Content-Type', 'text/plain'); // Set content type
+          res.setHeader('Content-Length', responseText.length); // Set content length
+          res.statusCode = 200; // Set status code to 200 (OK)
+          res.write(Buffer.from(responseText)); // Write the response to the client
         });
     },
   },
@@ -127,7 +129,7 @@ app.on('request', (req, res) => {
   // Loop through the route handlers and call the appropriate one
   for (const routeHandler of SERVER_ROUTE_HANDLERS) {
     if (routeHandler.route === req.url) {
-      routeHandler.handler(req, res);  // Call the handler for the matched route
+      routeHandler.handler(req, res); // Call the handler for the matched route
       break;
     }
   }
