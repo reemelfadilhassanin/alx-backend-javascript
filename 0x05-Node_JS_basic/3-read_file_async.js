@@ -1,74 +1,74 @@
 const fs = require('fs');
 
 /**
- * Reads a CSV file and processes the data to count and categorize students by their field of study.
- * @param {string} dataPath - Path to the database CSV file.
- * @throws Will throw an error if the database cannot be loaded or is not a valid file.
+ * Function to count students by field in a CSV file.
+ * It reads the file asynchronously, processes the student data,
+ * and logs the number of students in each field.
+ *
+ * @param {string} dataPath - The path to the CSV file containing student data.
+ * @returns {Promise} - A promise that resolves when the data has been processed successfully or rejects if an error occurs.
  */
-const countStudents = (dataPath) => {
-  // Check if the file exists
-  if (!fs.existsSync(dataPath)) {
-    throw new Error('Cannot load the database');
-  }
-
-  // Check if the path is actually a file
-  if (!fs.statSync(dataPath).isFile()) {
-    throw new Error('Cannot load the database');
-  }
-
-  // Read the file, remove extra spaces, and split into lines
-  const fileLines = fs
-    .readFileSync(dataPath, 'utf-8')
-    .toString('utf-8')
-    .trim()
-    .split('\n');
-
-  // Create an object to store students grouped by field of study
-  const studentGroups = {};
-
-  // Extract field names from the first line (header) of the CSV
-  const dbFieldNames = fileLines[0].split(',');
-
-  // All columns except the last one are student property names
-  const studentPropNames = dbFieldNames.slice(0, dbFieldNames.length - 1);
-
-  // Loop through all student records in the file (skip the header)
-  for (const line of fileLines.slice(1)) {
-    // Split the student data by commas
-    const studentRecord = line.split(',');
-
-    // Extract the property values (exclude the last column which is the field)
-    const studentPropValues = studentRecord.slice(0, studentRecord.length - 1);
-
-    // Extract the field of study (the last column in the CSV)
-    const field = studentRecord[studentRecord.length - 1];
-
-    // If the field does not exist in the studentGroups object, create it
-    if (!Object.keys(studentGroups).includes(field)) {
-      studentGroups[field] = [];
+const countStudents = (dataPath) => new Promise((resolve, reject) => {
+  // Asynchronously read the content of the CSV file
+  fs.readFile(dataPath, 'utf-8', (err, data) => {
+    if (err) {
+      // Reject the promise if there is an error reading the file
+      reject(new Error('Cannot load the database'));
     }
 
-    // Map the student properties to their corresponding names and values
-    const studentEntries = studentPropNames
-      .map((propName, idx) => [propName, studentPropValues[idx]]);
+    if (data) {
+      // Split the file content into individual lines, remove extra spaces, and convert it into an array
+      const fileLines = data
+        .toString('utf-8') // Ensure the data is treated as a UTF-8 string
+        .trim()            // Remove unnecessary whitespace from both ends
+        .split('\n');      // Split the string into an array by newline characters
 
-    // Add the student to the appropriate field group
-    studentGroups[field].push(Object.fromEntries(studentEntries));
-  }
+      // Initialize an object to store students grouped by their field of study
+      const studentGroups = {};
 
-  // Calculate the total number of students by summing the lengths of all student groups
-  const totalStudents = Object
-    .values(studentGroups)
-    .reduce((pre, cur) => (pre || []).length + cur.length);
+      // Extract the header line (field names) from the first row of the CSV
+      const dbFieldNames = fileLines[0].split(',');
 
-  // Log the total number of students
-  console.log(`Number of students: ${totalStudents}`);
+      // The student properties are all fields except the last one (which is the 'field' of study)
+      const studentPropNames = dbFieldNames.slice(0, dbFieldNames.length - 1);
 
-  // For each field group, log the number of students and their names
-  for (const [field, group] of Object.entries(studentGroups)) {
-    const studentNames = group.map((student) => student.firstname).join(', ');
-    console.log(`Number of students in ${field}: ${group.length}. List: ${studentNames}`);
-  }
-};
+      // Iterate over each line (after the header) to process the student data
+      for (const line of fileLines.slice(1)) {
+        const studentRecord = line.split(','); // Split each student's data into an array
+        const studentPropValues = studentRecord.slice(0, studentRecord.length - 1); // Exclude the 'field' column
+        const field = studentRecord[studentRecord.length - 1]; // The last column is the field of study
+
+        // If the field is not already in the studentGroups object, add it as an empty array
+        if (!Object.keys(studentGroups).includes(field)) {
+          studentGroups[field] = [];
+        }
+
+        // Pair each property name with its corresponding value
+        const studentEntries = studentPropNames
+          .map((propName, idx) => [propName, studentPropValues[idx]]);
+        
+        // Add the student as an object to the appropriate field group
+        studentGroups[field].push(Object.fromEntries(studentEntries));
+      }
+
+      // Calculate the total number of students by summing the length of all student groups
+      const totalStudents = Object
+        .values(studentGroups) // Get an array of all student groups
+        .reduce((pre, cur) => (pre || []).length + cur.length, 0); // Sum the number of students in all fields
+
+      // Log the total number of students
+      console.log(`Number of students: ${totalStudents}`);
+
+      // For each field, log the number of students and their names
+      for (const [field, group] of Object.entries(studentGroups)) {
+        const studentNames = group.map((student) => student.firstname).join(', '); // Get the first names of all students
+        console.log(`Number of students in ${field}: ${group.length}. List: ${studentNames}`);
+      }
+
+      // Resolve the promise indicating the data has been processed successfully
+      resolve(true);
+    }
+  });
+});
 
 module.exports = countStudents;
