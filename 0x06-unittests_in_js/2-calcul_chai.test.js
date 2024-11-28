@@ -34,4 +34,3 @@ describe('calculateNumber', () => {
     assert.strictEqual(calculateNumber(2.499999, 3.499999), 5);
   });
 });
-
